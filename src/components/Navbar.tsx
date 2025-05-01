@@ -1,81 +1,258 @@
-<div className="navbar fixed top-0 z-50 w-full bg-purple-900 text-white shadow-md">
-  <div className="navbar-start">
-    <div className="dropdown">
-      <div
-        tabIndex={0}
-        role="button"
-        className="btn btn-ghost lg:hidden text-white hover:bg-purple-800"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h8m-8 6h16"
-          />
-        </svg>
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+
+const Navbar: React.FC = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrolled]);
+
+  // Add CSS animations using useEffect to ensure it runs only on the client side
+  useEffect(() => {
+    const styleSheet = document.styleSheets[0];
+    if (styleSheet) {
+      try {
+        styleSheet.insertRule(
+          `
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `,
+          styleSheet.cssRules.length
+        );
+
+        styleSheet.insertRule(
+          `
+          .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out forwards;
+          }
+        `,
+          styleSheet.cssRules.length
+        );
+      } catch (e) {
+        console.log("Animation styles already added");
+      }
+    }
+  }, []);
+
+  return (
+    <div
+      className={`glass-navbar fixed top-0 z-50 w-full ${
+        scrolled ? "scrolled" : ""
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link
+              href="/"
+              className="flex items-center gap-2 transition-all duration-300 hover:opacity-85 hover:scale-105"
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rich-blue to-rich-blue-dark flex items-center justify-center shadow-blue-glow relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-rich-blue-light to-rich-blue opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <Image
+                  src="/favicon.ico"
+                  alt="Alfred Logo"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
+              </div>
+              <span className="text-xl font-semibold tracking-tight text-white headline-shadow relative">
+                Alfred
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rich-blue-light group-hover:w-full transition-all duration-300"></span>
+              </span>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-2">
+            <ul className="flex space-x-2">
+              <li>
+                <NavLink href="/how-it-works" scrolled={scrolled}>
+                  How it works
+                </NavLink>
+              </li>
+              <li>
+                <NavLink href="/key-shortcuts" scrolled={scrolled}>
+                  Keyboard Shortcuts
+                </NavLink>
+              </li>
+              <li>
+                <NavLink href="/philosophy" scrolled={scrolled}>
+                  Philosophy
+                </NavLink>
+              </li>
+              <li>
+                <NavLink href="/contact-me" scrolled={scrolled}>
+                  Contact
+                </NavLink>
+              </li>
+              <li className="ml-3">
+                <Link
+                  href="https://github.com/emharsha1812/AIFred"
+                  className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-medium text-white border border-glass-white bg-glass-dark backdrop-blur-sm transition-all duration-300 hover:border-rich-blue/30 hover:shadow-blue-glow hover:scale-105 relative overflow-hidden group"
+                >
+                  <span className="absolute inset-0 bg-rich-blue/10 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></span>
+                  <svg
+                    className="w-5 h-5 mr-2 relative z-10"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span className="relative z-10">GitHub</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Mobile Navigation Toggle */}
+          <div className="md:hidden flex items-center">
+            <div className="dropdown dropdown-end">
+              <button
+                tabIndex={0}
+                className="btn btn-ghost btn-circle text-white hover:bg-glass-white/10 transition-all duration-300 relative overflow-hidden group"
+              >
+                <span className="absolute inset-0 bg-rich-blue/10 transform scale-0 rounded-full group-hover:scale-100 transition-transform duration-300"></span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                </svg>
+              </button>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-rich-black/80 backdrop-blur-lg mt-3 p-3 shadow-blue-glow/20 rounded-xl w-60 right-0 border border-glass-white animate-fadeIn"
+              >
+                <li>
+                  <Link
+                    href="/"
+                    className="block px-4 py-2.5 text-gray-200 hover:text-white hover:bg-rich-blue/10 rounded-lg transition-all duration-300 relative overflow-hidden group"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-it-works"
+                    className="block px-4 py-2.5 text-gray-200 hover:text-white hover:bg-rich-blue/10 rounded-lg transition-all duration-300"
+                  >
+                    How it works?
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/key-shortcuts"
+                    className="block px-4 py-2.5 text-gray-200 hover:text-white hover:bg-rich-blue/10 rounded-lg transition-all duration-300"
+                  >
+                    Keyboard Shortcuts
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/philosophy"
+                    className="block px-4 py-2.5 text-gray-200 hover:text-white hover:bg-rich-blue/10 rounded-lg transition-all duration-300"
+                  >
+                    Philosophy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact-me"
+                    className="block px-4 py-2.5 text-gray-200 hover:text-white hover:bg-rich-blue/10 rounded-lg transition-all duration-300"
+                  >
+                    Contact me
+                  </Link>
+                </li>
+                <div className="glass-divider my-2 mx-2"></div>
+                <li>
+                  <Link
+                    href="https://github.com/emharsha1812/AIFred"
+                    className="mt-2 flex items-center justify-center px-4 py-2.5 rounded-lg text-white bg-rich-blue/60 hover:bg-rich-blue transition-all duration-300 relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-rich-blue/0 via-rich-blue-light/20 to-rich-blue/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></span>
+                    <svg
+                      className="w-5 h-5 mr-2 relative z-10"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="relative z-10">GitHub Repository</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <ul
-        tabIndex={0}
-        className="menu menu-sm dropdown-content bg-purple-800 rounded-box z-50 mt-3 w-52 p-2 shadow-lg"
-      >
-        <li>
-          <a className="hover:bg-purple-700">Item 1</a>
-        </li>
-        <li>
-          <a className="hover:bg-purple-700">Parent</a>
-          <ul className="p-2 bg-purple-800">
-            <li>
-              <a className="hover:bg-purple-700">Submenu 1</a>
-            </li>
-            <li>
-              <a className="hover:bg-purple-700">Submenu 2</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <a className="hover:bg-purple-700">Item 3</a>
-        </li>
-      </ul>
     </div>
-    <a className="btn btn-ghost text-xl text-white hover:bg-purple-800">
-      Alfred
-    </a>
-  </div>
+  );
+};
 
-  <div className="navbar-center hidden lg:flex">
-    <ul className="menu menu-horizontal px-1 text-white">
-      <li>
-        <a className="hover:bg-purple-800">Item 1</a>
-      </li>
-      <li>
-        <details>
-          <summary className="cursor-pointer hover:bg-purple-800 rounded">
-            Parent
-          </summary>
-          <ul className="p-2 bg-purple-800 rounded-box">
-            <li>
-              <a className="hover:bg-purple-700">Submenu 1</a>
-            </li>
-            <li>
-              <a className="hover:bg-purple-700">Submenu 2</a>
-            </li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <a className="hover:bg-purple-800">Item 3</a>
-      </li>
-    </ul>
-  </div>
+// Helper component for nav links
+const NavLink = ({
+  href,
+  children,
+  scrolled,
+}: {
+  href: string;
+  children: React.ReactNode;
+  scrolled: boolean;
+}) => {
+  return (
+    <Link
+      href={href}
+      className={`px-4 py-2 rounded-lg text-gray-200 text-sm font-medium transition-all duration-300 hover:text-white hover:bg-glass-white/10 relative group ${
+        scrolled ? "py-1.5" : "py-2"
+      }`}
+    >
+      <span className="relative z-10">{children}</span>
+      <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-rich-blue-light/70 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></span>
+    </Link>
+  );
+};
 
-  <div className="navbar-end">
-    <a className="btn bg-purple-600 hover:bg-purple-500 text-white">Button</a>
-  </div>
-</div>;
+export default Navbar;
