@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
         `,
           styleSheet.cssRules.length
         );
-      } catch (e) {
+      } catch {
         console.log("Animation styles already added");
       }
     }
@@ -204,7 +204,7 @@ const Navbar: React.FC = () => {
                 <div className="glass-divider my-2 mx-2"></div>
                 <li>
                   <Link
-                    href="https://github.com/emharsha1812/AIFred"
+                    href="https://github.com/emharsha1812/Alfred"
                     className="mt-2 flex items-center justify-center px-4 py-2.5 rounded-lg text-white bg-rich-blue/60 hover:bg-rich-blue transition-all duration-300 relative overflow-hidden group"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-rich-blue/0 via-rich-blue-light/20 to-rich-blue/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></span>
